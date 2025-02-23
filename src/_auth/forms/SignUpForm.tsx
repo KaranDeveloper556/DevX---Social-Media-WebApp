@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -15,9 +14,13 @@ import { Input } from "@/components/ui/input";
 import { SignUpValidation } from "@/lib/validation";
 import Loader from "@/components/shared/Loader";
 import { Link } from "react-router-dom";
+import { createUserAccount } from "@/lib/appwrite/api";
+import { toast } from "react-toastify";
 
 const SignUpForm = () => {
+  const notify = () => toast("Sign Up Failed");
   const isLoading: Boolean = false;
+
   const form = useForm<z.infer<typeof SignUpValidation>>({
     resolver: zodResolver(SignUpValidation),
     defaultValues: {
@@ -28,9 +31,13 @@ const SignUpForm = () => {
     },
   });
 
-  function onSubmit(values: z.infer<typeof SignUpValidation>) {
-    console.log(values);
-  }
+  const onSubmit = async (values: z.infer<typeof SignUpValidation>) => {
+    const newUser = await createUserAccount(values);
+    if (!newUser) {
+      return notify();
+    }
+    console.log(newUser);
+  };
   return (
     <Form {...form}>
       <div className="formHeader relative flex items-center flex-col">
@@ -134,8 +141,12 @@ const SignUpForm = () => {
           )}
         </Button>
       </form>
+
       <p className="navigation_to_login mt-4">
-        Already have an account? <Link to="/sign-in" className=" text-blue-600">Log in</Link>
+        Already have an account?{" "}
+        <Link to="/sign-in" className=" text-blue-600">
+          Log in
+        </Link>
       </p>
     </Form>
   );
