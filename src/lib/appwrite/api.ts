@@ -20,25 +20,30 @@ export const createUserAccount = async (user: INewUser) => {
             accountId: newAccount.$id,
             name: newAccount.name,
             email: newAccount.email,
-            username:user.username,
+            username: user.username,
             imageUrl: avatarUrl
         })
+        return newUser;
 
     } catch (error) {
+
         console.log(error)
         return error;
+
     } finally {
+
         console.log("Want To Create User") // For Testing
+
     }
 
 }
 
 export async function saveUserToDB(user: {
-    accountId: String;
-    email: String;
-    name: String;
-    username?: String;
-    imageUrl: URL | String;
+    accountId: string;
+    email: string;
+    name: string;
+    username?: string;
+    imageUrl: URL | string;
 }) {
     try {
 
@@ -52,5 +57,21 @@ export async function saveUserToDB(user: {
         return newUser
     } catch (error) {
         console.log(error)
+    }
+}
+
+export const signInAccount = async (user: {
+    email: string
+    password: string
+}) => {
+    try {
+
+        const session = await account.createEmailPasswordSession(user.email, user.password)
+        return session;
+
+    } catch (error) {
+
+        console.log(error)
+        
     }
 }
