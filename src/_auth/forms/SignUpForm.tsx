@@ -1,8 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
-
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import {
@@ -26,9 +24,15 @@ import { useUserContext } from "@/context/AuthContext";
 
 const SignUpForm = () => {
 
+  //Toasts
   const SignInFailed = () => toast("Sign Up Failed");
+
+  //Navigator
   const navigate = useNavigate();
+
+
   const { checkAuthUser, isLoading: isUserLoading } = useUserContext();
+  
   const { mutateAsync: createUserAccount, isPending: isCreatingUser } =
     useCreateUserAccount();
 
@@ -47,7 +51,7 @@ const SignUpForm = () => {
 
   //On Submit fn
   const onSubmit = async (values: z.infer<typeof SignUpValidation>) => {
-    
+
     const newUser = await createUserAccount(values);
     if (!newUser) {
       return SignInFailed();
@@ -69,6 +73,7 @@ const SignUpForm = () => {
     } else {
       return SignInFailed();
     }
+
   };
 
   return (
