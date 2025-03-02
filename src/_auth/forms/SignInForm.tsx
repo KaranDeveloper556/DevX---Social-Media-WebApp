@@ -130,7 +130,8 @@ const SignInForm = () => {
 
       <p className="navigation_to_login mt-4">
         Don't have an account?{" "}
-        <Link to="/sign-up" className=" text-blue-600">
+        <Link to="/sign-up
+        " className=" text-blue-600">
           Sign Up
         </Link>
       </p>
