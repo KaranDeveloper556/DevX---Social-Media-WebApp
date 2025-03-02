@@ -25,17 +25,14 @@ import {
 import { useUserContext } from "@/context/AuthContext";
 
 const SignUpForm = () => {
-  // Toasts for Notification
+
   const SignInFailed = () => toast("Sign Up Failed");
-
   const navigate = useNavigate();
-
   const { checkAuthUser, isLoading: isUserLoading } = useUserContext();
-
   const { mutateAsync: createUserAccount, isPending: isCreatingUser } =
     useCreateUserAccount();
 
-  const { mutateAsync: signInAccount, isPending: isSigningIn } =
+  const { mutateAsync: signInAccount, isPending: isSigningInUser } =
     useSignInAccount();
 
   const form = useForm<z.infer<typeof SignUpValidation>>({
@@ -50,8 +47,8 @@ const SignUpForm = () => {
 
   //On Submit fn
   const onSubmit = async (values: z.infer<typeof SignUpValidation>) => {
+    
     const newUser = await createUserAccount(values);
-
     if (!newUser) {
       return SignInFailed();
     }
@@ -67,8 +64,8 @@ const SignUpForm = () => {
 
     const isLoggedIn = await checkAuthUser();
     if (!isLoggedIn) {
-      return form.reset();
-      navigate("/");
+      form.reset();
+      return navigate("/");
     } else {
       return SignInFailed();
     }
@@ -172,7 +169,7 @@ const SignUpForm = () => {
         />
 
         <Button type="submit" className="shad-button_primary">
-          {isCreatingUser ? (
+          {isCreatingUser || isUserLoading || isSigningInUser ? (
             <div className="button_loading flex justify-center items-center gap-2 flex-row">
               <Loader /> Loading...
             </div>
