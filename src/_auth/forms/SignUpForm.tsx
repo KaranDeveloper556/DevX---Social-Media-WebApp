@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -14,23 +14,28 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-
 import Loader from "@/components/shared/Loader";
+
 import { SignUpValidation } from "@/lib/validation";
 import { toast } from "react-toastify";
 import {
-  useCreateUserAccountMutation,
+  useCreateUserAccount,
   useSignInAccount,
 } from "@/lib/react-query/quiresAndMutation";
+import { useUserContext } from "@/context/AuthContext";
 
 const SignUpForm = () => {
   // Toasts for Notification
   const SignInFailed = () => toast("Sign Up Failed");
 
-  const { mutateAsync: createUserAccount, isLoading } =
-    useCreateUserAccountMutation();
+  const navigate = useNavigate();
 
-  const { mutateAsync: signInAccount, isLoading: isSigningIn } =
+  const { checkAuthUser, isLoading: isUserLoading } = useUserContext();
+
+  const { mutateAsync: createUserAccount, isPending: isCreatingUser } =
+    useCreateUserAccount();
+
+  const { mutateAsync: signInAccount, isPending: isSigningIn } =
     useSignInAccount();
 
   const form = useForm<z.infer<typeof SignUpValidation>>({
@@ -57,6 +62,14 @@ const SignUpForm = () => {
     });
 
     if (!session) {
+      return SignInFailed();
+    }
+
+    const isLoggedIn = await checkAuthUser();
+    if (!isLoggedIn) {
+      return form.reset();
+      navigate("/");
+    } else {
       return SignInFailed();
     }
   };
@@ -159,7 +172,7 @@ const SignUpForm = () => {
         />
 
         <Button type="submit" className="shad-button_primary">
-          {isLoading ? (
+          {isCreatingUser ? (
             <div className="button_loading flex justify-center items-center gap-2 flex-row">
               <Loader /> Loading...
             </div>
