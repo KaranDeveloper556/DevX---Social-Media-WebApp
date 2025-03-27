@@ -15,7 +15,7 @@ const TopBar = () => {
   }, [isSuccess]);
 
   return (
-    <section className="topbar bg-gray-900 flex justify-between items-center gap-2 md:px-6 px-4 py-4">
+    <section className="topbar sticky top-0 z-50 md:hidden bg-dark-2 w-full bg-gray-900 flex justify-between items-center gap-2 md:px-6 px-4 py-4">
       <div className="logo-container">
         <Link to={"/"}>
           <img
@@ -34,7 +34,11 @@ const TopBar = () => {
           <TbLogout className=" scale-[1.5]" />
         </Button>
         <Link to={"/profile"} className="flex-center gap-3">
-          <img src="/assets/profileImg.png" alt="" className="h-[3rem] w-[3rem] object-cover rounded-full"/>
+          <img
+            src="/assets/profileImg.png"
+            alt=""
+            className="h-[3rem] w-[3rem] object-cover rounded-full"
+          />
         </Link>
       </div>
     </section>
