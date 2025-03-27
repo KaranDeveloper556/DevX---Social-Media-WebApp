@@ -53,7 +53,7 @@ export async function saveUserToDB(user: {
             user
         )
         return newUser
-        
+
     } catch (error) {
         console.log(error)
     }
@@ -72,6 +72,16 @@ export const signInAccount = async (user: {
 
         console.log(error)
 
+    }
+}
+
+export const signOutAccount = async () => {
+    try {
+        const session = await account.deleteSession("current")
+        return session;
+
+    } catch (error) {
+        console.log(error)
     }
 }
 
